@@ -20,8 +20,6 @@
  *
  */
 public class GaussianElimination {
-	private static int[][] matrix;
-
 	public GaussianElimination() {
 		
 	}
