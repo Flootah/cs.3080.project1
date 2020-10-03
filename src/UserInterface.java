@@ -10,12 +10,12 @@ public class UserInterface {
 	 */
 	private int state;
 	UIDictionary dictionary;
-	Calculator calculator;
 	Scanner sc;
 	private int[][] matrix;
 	private int	numEquations;
 	private String[] variables;
 	private boolean inputMethod;	// 1 = manual, 0 = file entry
+	private boolean calcMethod;		// 1 = Gauss Elimination, 0 = Jacobi & Gauss-Seidel Iterative
 	DecimalFormat df;
 	
 	/*
@@ -52,21 +52,21 @@ public class UserInterface {
 			/*
 			 * State 1: Main Menu
 			 * User will choose between two options:
-			 * a: Manually entering a matrix
-			 * b: Choosing a matrix file
-			 * Upon completion, goes to state 2.
+			 * a: Gaussian Elimination
+			 * b: Jacobi / Gauss-Seidel Iterative
+			 * Upon completion, goes to state 6 for input method.
 			 */
-			case 1: // main menu
+			case 1:
 				// prompt user and store their response string
-				response = prompt(dictionary.mainMenu);
+				response = prompt(dictionary.calcMenu);
 				switch(response) {
 				case "a":
-					inputMethod = true;
-					state = 2;
+					calcMethod = true;
+					state = 6;
 					break;
 				case "b":
-					inputMethod = false;
-					state = 2;
+					calcMethod = false;
+					state = 6;
 					break;
 				}
 				break;
@@ -149,20 +149,15 @@ public class UserInterface {
 			/*
 			 * State 4: Complete Matrix printing and storage.
 			 * Prints @matrix now that it is complete.
+			 * determined Calculation method and goes to corresponding state.
 			 * Upon completion, goes to state 0.
 			 */
 			case 4: // matrix complete, do a thing.
 				System.out.println("Matrix input:");
-				calculator = new Calculator(matrix);
 				printMatrix(matrix);
-				float[] answers = calculator.calculate();
-				System.out.println();
-				System.out.println();
-				for(int i = 0; i < answers.length; i++) {
-					System.out.println(variables[i] + ": " + df.format(answers[answers.length-1-i]));
-				}
-				System.out.println();
-				state = 0;
+				state = 7;					// default to jacobi/gauss seidel @ state 7
+				if(calcMethod) state = 8;	// if set to gauss elim, goto state 8
+
 				break;
 			/*
 			 * State 5: Filename entry
@@ -221,6 +216,82 @@ public class UserInterface {
 					System.out.println("Non-Integer value entered.");
 				}
 				state = 4;
+				break;
+			/*
+			 * State 6: Input method selection
+			 * User will choose between two options:
+			 * a: manual entry
+			 * b: filename entry
+			 * Upon completion, goes to state 6 for input method.
+			 */
+			case 6:
+				// prompt user and store their response string
+				response = prompt(dictionary.inputMenu);
+				switch(response) {
+				case "a":
+					inputMethod = true;
+					state = 2;
+					break;
+				case "b":
+					inputMethod = false;
+					state = 2;
+					break;
+				}
+				break;
+			/*
+			 * Jacobi and Gauss-Seidel Iterative calculation
+			 * enter desired stopping error and starting solutions.
+			 */
+			case 7:
+				double stopError;
+				response = prompt(dictionary.errorEntry);		// enter desired stopping error
+				try {
+					stopError = Double.parseDouble(response);
+				} catch (NumberFormatException e){
+					break;
+				}
+				double[] solution = new double[numEquations];
+				response = prompt(dictionary.solutionEntry);	// enter desired initial solultions
+				Scanner s = new Scanner(response);
+				int k = 0;
+				try {								// iterate through input, placing into array.
+					while(s.hasNextInt()) {
+						solution[k] = s.nextInt();
+						k++;
+					}
+				} catch (ArrayIndexOutOfBoundsException e) {	// catches all inputs > than needed
+					System.out.println(dictionary.numberEntryError);
+					System.out.println("Too many values inputted.");
+					break;
+				}
+				if(k < numEquations) {
+					System.out.println(dictionary.numberEntryError);
+					System.out.println("Too few values inputted.");
+					break;
+				}
+				
+				
+				IterativeSolver i_calculator = new IterativeSolver(matrix, solution, stopError);
+				i_calculator.j_calculate();
+				System.out.println("Jacobi calculation complete!");
+				System.out.println("--------------------------------------------------");
+				i_calculator.gs_calculate();
+				System.out.println("Gauss-Sbeidel calculation complete");
+				state = 0;
+				break;
+			/* 
+			 * Gaussian Elimination calculation.
+			 */
+			case 8:
+				GaussianElimination e_calculator = new GaussianElimination(matrix);
+				float[] answers = e_calculator.calculate();
+				System.out.println();
+				System.out.println();
+				for(int i = 0; i < answers.length; i++) {
+					System.out.println(variables[i] + ": " + df.format(answers[answers.length-1-i]));
+				}
+				System.out.println();
+				state = 0;
 				break;
 			default:
 				prompt(dictionary.badState);
