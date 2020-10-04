@@ -11,12 +11,14 @@ public class UIDictionary {
 	public String exit;
 	public String[] variables;
 	public String badState;
+	public String divisor;
 
 	public UIDictionary() {
 		mainMenu =			"Choose an option: \n"
 								+ "a: 	Enter an equation manually.\n"
 								+ "b: 	Enter matrix file. \n"
 								+ "exit: 	Exit Program\n";
+		divisor = 			"--------------------------------------------------";
 		
 		numEq =				"Enter the number of equations in the system.\n"
 								+ "You may enter any number 1-10.\n"

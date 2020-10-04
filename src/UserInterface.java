@@ -30,7 +30,7 @@ public class UserInterface {
 		sc = new Scanner(System.in);
 		dictionary = new UIDictionary();
 		variables = dictionary.variables;
-		df = new DecimalFormat("##.#####");
+		df = new DecimalFormat("##.##########");
 	}
 	
 	/*
@@ -155,11 +155,11 @@ public class UserInterface {
 				System.out.println("Matrix input:");
 				calculator = new Calculator(matrix);
 				printMatrix(matrix);
-				float[] answers = calculator.calculate();
+				double[] answers = calculator.calculate();
 				System.out.println();
 				System.out.println();
 				for(int i = 0; i < answers.length; i++) {
-					System.out.println(variables[i] + ": " + df.format(answers[answers.length-1-i]));
+					System.out.println(variables[i] + ": " + smartRound(answers[i]));
 				}
 				System.out.println();
 				state = 0;
@@ -270,11 +270,27 @@ public class UserInterface {
 	}
 	
 	private String prompt(String print) {
-		System.out.println("--------------------------------------------------");
+		System.out.println(dictionary.divisor);
 		System.out.println(print);
 		String response = sc.nextLine();
 		if(response.equals("exit")) state = 0;
 		return response.toLowerCase();
+	}
+	
+	/*
+	 * takes in a double and returns a string with a possible rounded number.
+	 * 
+	 * if the number is very close to an integer with a precision of 9 places
+	 * (ex. 2.999999999), return a rounded string to that nearest int.
+	 * if the number is not close to a whole number, return the input double
+	 * as a string.
+	 */
+	private String smartRound(double x) {
+		try {
+			return Integer.toString(Integer.parseInt(df.format(x)));
+		} catch (NumberFormatException e) {
+			return Double.toString(x);
+		}
 	}
 
 }
