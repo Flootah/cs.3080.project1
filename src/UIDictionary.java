@@ -3,7 +3,8 @@
  */
 public class UIDictionary {
 
-	public String mainMenu;
+	public String inputMenu;
+	public String calcMenu;
 	public String fileEntry;
 	public String numEq;
 	public String numberEntryError;
@@ -12,13 +13,19 @@ public class UIDictionary {
 	public String[] variables;
 	public String badState;
 	public String divisor;
+	public String errorEntry;
+	public String solutionEntry;
 
 	public UIDictionary() {
-		mainMenu =			"Choose an option: \n"
+		inputMenu =			"Choose an option: \n"
 								+ "a: 	Enter an equation manually.\n"
 								+ "b: 	Enter matrix file. \n"
 								+ "exit: 	Exit Program\n";
 		divisor = 			"--------------------------------------------------";
+		
+		calcMenu = 			"Choose a calculation Method: \n"
+							+ "a: Gaussian Elimination w/ Scaled Partial Pivoting\n"
+							+ "b: Jacobi & Gauss-Seidel Iterative Methods";
 		
 		numEq =				"Enter the number of equations in the system.\n"
 								+ "You may enter any number 1-10.\n"
@@ -29,6 +36,10 @@ public class UIDictionary {
 		fileEntry =			"Enter the name of the file containing the matrix.\n"
 								+ "Please include the extension.\n"
 								+ "Type 'back' to return to equation quantity input.";
+		
+		errorEntry = 		"Enter the stopping error desired for this calculation:";
+		
+		solutionEntry =		"Enter the starting solution for the iterative methods: ";
 		
 		debug =				"hey, you made it here!\n"
 								+ "and this is a new line.\n"
