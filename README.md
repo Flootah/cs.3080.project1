@@ -1,5 +1,5 @@
 # cs3080-project-1
- Program that completes various problems with matrices.
+ Program that completes a system of equations in the form of a matrix. User can manually input matrices or choose from a text file. Program includes two ways to solve a system of equations:
  
 ## Gaussian Elimination
 Gaussian elimination, also known as row reduction, is an algorithm for solving systems of linear equations. It consists of a sequence of operations performed on the corresponding matrix of coefficients.
