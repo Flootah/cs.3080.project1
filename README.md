@@ -1,4 +1,4 @@
-# cs3080-project-1
+# Matrix Calculator
  Program that completes a system of equations in the form of a matrix. User can manually input matrices or choose from a text file. Program includes two ways to solve a system of equations:
  
 ## Gaussian Elimination
